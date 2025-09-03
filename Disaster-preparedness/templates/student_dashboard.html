@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/student_dashboard.css') }}">
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Student</h2>
+      <ul>
+        <li><a href="#courses">📚 Courses</a></li>
+        <li><a href="#quizzes">📝 Quizzes</a></li>
+        <li><a href="#drills">🎯 Drills</a></li>
+        <li><a href="#profile">👤 Profile</a></li>
+        <li><a href="{{ url_for('logout') }}">🚪 Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+      <!-- Courses Section -->
+      <section id="courses" class="modules">
+        <h2>📚 Disaster Preparedness Courses</h2>
+        <div class="course-card">
+          <h3>🌍 Earthquake</h3>
+          <p>Learn earthquake types and survival strategies.</p>
+          <a href="/course/1" class="btn">View Course</a>
+        </div>
+      </section>
+      <section id="quizzes" class="modules">
+  <h2>📝 Disaster Preparedness Quizzes</h2>
+  <div class="course-card">
+    <h3>🌍 Earthquake Quiz</h3>
+    <p>Test your knowledge about earthquakes and safety measures.</p>
+    <a href="/quiz/earthquake" class="btn">Start Quiz</a>
+  </div>
+</section>
+
+    </main>
+  </div>
+</body>
+</html>

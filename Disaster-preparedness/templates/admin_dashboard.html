@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Admin Dashboard</h1>
+    <a class="btn btn-ghost" href="/logout">Logout</a>
+  </header>
+
+  <main class="container">
+    <!-- Add Student -->
+    <section class="card">
+      <h2>➕ Add New Student</h2>
+      <form class="form-grid" action="/add_student" method="post">
+        <label>
+          <span>Name</span>
+          <input type="text" name="name" placeholder="Full Name" required>
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" name="email" placeholder="student@email.com" required>
+        </label>
+        <label>
+          <span>Password</span>
+          <input type="password" name="password" placeholder="Password" required>
+        </label>
+        <div class="form-actions">
+          <button class="btn" type="submit">Add Student</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Student Records -->
+    <section class="card">
+      <div class="card-header">
+        <h2>📚 Student Records</h2>
+        <span class="pill">Total: {{ students|length }}</span>
+      </div>
+
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in students %}
+            <tr>
+              <td>{{ s[0] }}</td>
+              <td>{{ s[1] }}</td>
+              <td>{{ s[2] }}</td>
+            </tr>
+            {% endfor %}
+            {% if students|length == 0 %}
+            <tr>
+              <td colspan="3" class="empty">No students yet. Add your first student above.</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
