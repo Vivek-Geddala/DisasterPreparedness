@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Admin Dashboard</h1>
+    <a class="btn btn-ghost" href="/logout">Logout</a>
+  </header>
+
+  <main class="container">
+    <!-- Add Student -->
+    <section class="card">
+      <h2>➕ Add New Student</h2>
+      <form class="form-grid" action="/admin_dashboard" method="post">
+        <label>
+          <span>Name</span>
+          <input type="text" name="name" placeholder="Full Name" required>
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" name="email" placeholder="student@email.com" required>
+        </label>
+        <label>
+          <span>Password</span>
+          <input type="password" name="password" placeholder="Password" required>
+        </label>
+        <div class="form-actions">
+          <button class="btn" type="submit">Add Student</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Student Records -->
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Progress</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ student[1] }}</td>
+            <td>{{ student[2] }}</td>
+            <td>
+              {% if student_progress and student_progress.get(student[0]) %}
+                <ul>
+                  {% for course, percent in student_progress[student[0]] %}
+                  <li>{{ course }}: {{ percent }}%</li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <span class="empty">No progress yet</span>
+              {% endif %}
+            </td>
+            <td>
+              <form action="/delete_student/{{ student[0] }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn-ghost"
+                  onclick="return confirm('Are you sure you want to remove this student?');">
+                  Remove
+                </button>
+              </form>
+              <a class="btn" href="{{ url_for('student_progress', student_id=student[0]) }}">
+                View Detailed Progress
+              </a>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="5" class="empty">No students found</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

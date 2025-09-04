@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fire Safety Course (Schools & Colleges)</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/course_page.css') }}">
+</head>
+<body>
+  <div class="course-container">
+    <h1>🔥 Fire Safety in Schools & Colleges</h1>
+    <p class="subtitle">Recognize hazards, follow drills, and evacuate safely.</p>
+
+    <section class="course-section">
+      <h2>📖 Common Campus Fire Risks</h2>
+      <ul>
+        <li>Electrical faults, overloaded extensions, lab/kitchen accidents.</li>
+        <li>Blocked exits, locked doors, and cluttered corridors.</li>
+        <li>Improper storage of flammables in labs or workshops.</li>
+      </ul>
+    </section>
+
+    <section class="course-section">
+      <h2>🛡 Key Safety Actions</h2>
+      <ul>
+        <li>Know two exits from every room; keep routes clear.</li>
+        <li>When alarms sound: evacuate, don’t use elevators.</li>
+        <li>“Stop, Drop, and Roll” if clothing catches fire.</li>
+        <li>Only trained staff use extinguishers; others evacuate.</li>
+      </ul>
+    </section>
+
+    <section class="course-section">
+      <h2>🎥 Learn by Example</h2>
+
+      <div class="video">
+        <iframe
+          src="https://www.youtube.com/embed/8OVHhkqpZf8?enablejsapi=1"
+          title="NFPA Kids: Fire Safety with Sparky"
+          frameborder="0" allowfullscreen
+          data-course="Fire"
+          data-element="video1"></iframe>
+      </div>
+      <p class="caption">Video: NFPA Kids — core fire-safety steps for students.</p>
+
+      <div class="video">
+        <iframe
+          src="https://www.youtube.com/embed/6uaP4bJSn_s?enablejsapi=1"
+          title="Fire safety mock drill in school (BMC Disaster Management)"
+          frameborder="0" allowfullscreen
+          data-course="Fire"
+          data-element="video2"></iframe>
+      </div>
+      <p class="caption">Video: BMC Disaster Management — school fire drill demo.</p>
+    </section>
+  </div>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+  let players = {};
+
+  function onYouTubeIframeAPIReady() {
+    document.querySelectorAll("iframe[data-element]").forEach((iframe) => {
+      const elementId = iframe.getAttribute("data-element");
+      const course = iframe.getAttribute("data-course");
+
+      players[elementId] = new YT.Player(iframe, {
+        events: {
+          'onStateChange': function(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+              markCompleted(course, elementId);
+            }
+          }
+        }
+      });
+    });
+  }
+
+  function markCompleted(course, elementId) {
+    fetch("/update_progress", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({course: course, element: elementId})
+    })
+    .then(res => res.json())
+    .then(data => console.log("✅ Progress updated:", data));
+  }
+  </script>
+</body>
+</html>

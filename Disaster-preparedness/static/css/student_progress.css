@@ -1,0 +1,119 @@
+/* General Layout */
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2c3e50;
+  color: white;
+  padding: 1rem 2rem;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.topbar .btn {
+  background: #3498db;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.topbar .btn:hover {
+  background: #2980b9;
+}
+
+/* Container & Card */
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.card {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.card h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+/* Table */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 0.8rem;
+  text-align: left;
+}
+
+.table th {
+  background: #34495e;
+  color: white;
+}
+
+.table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.empty {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+}
+
+/* Progress Bar */
+.progress-bar {
+  background: #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 20px;
+  width: 100%;
+  position: relative;
+}
+
+.progress-fill {
+  background: linear-gradient(90deg, #27ae60, #2ecc71);
+  height: 100%;
+  text-align: center;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+  line-height: 20px;
+  transition: width 0.4s ease;
+}
+.progress-fill {
+  background: linear-gradient(90deg, #27ae60, #2ecc71);
+  height: 100%;
+  text-align: center;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+  line-height: 20px;
+  transition: width 0.4s ease;
+
+  /* use CSS variable */
+  width: var(--progress);
+}
+

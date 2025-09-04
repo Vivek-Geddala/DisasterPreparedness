@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flood Safety Course</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/course_page.css') }}">
+</head>
+<body>
+  <div class="course-container">
+    <h1>🌊 Flood Preparedness</h1>
+    <p class="subtitle">Understand floods, their risks, and how to stay safe.</p>
+
+    <section class="course-section">
+      <h2>📖 What Causes Floods?</h2>
+      <p>Floods can result from heavy rain, overflowing rivers, dam/embankment failures, storm surge, or rapid snowmelt. Urban areas face added risk from poor drainage.</p>
+
+      <div class="video">
+        <iframe
+          src="https://www.youtube.com/embed/Glc-1f4Ez00?enablejsapi=1"
+          title="Disaster Preparedness: Floods (American Red Cross)"
+          frameborder="0" allowfullscreen
+          data-course="Flood"
+          data-element="video1"></iframe>
+      </div>
+      <p class="caption">Video: American Red Cross — Disaster Preparedness: Floods.</p>
+    </section>
+
+    <section class="course-section">
+      <h2>🛡 What to Do During a Flood</h2>
+      <ul>
+        <li>Move to higher ground; avoid low-lying areas.</li>
+        <li>Never walk/drive through flood water (“Turn Around, Don’t Drown”).</li>
+        <li>Unplug appliances; switch off mains power if safe to do so.</li>
+        <li>Follow official advisories and evacuation orders.</li>
+      </ul>
+
+      <div class="video">
+        <iframe
+          src="https://www.youtube.com/embed/7IQTeelrDWA?enablejsapi=1"
+          title="How to stay safe in a flash flood emergency"
+          frameborder="0" allowfullscreen
+          data-course="Flood"
+          data-element="video2"></iframe>
+      </div>
+      <p class="caption">Video: Flash-flood safety overview.</p>
+    </section>
+  </div>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+  let players = {};
+
+  function onYouTubeIframeAPIReady() {
+    document.querySelectorAll("iframe[data-element]").forEach((iframe) => {
+      const elementId = iframe.getAttribute("data-element");
+      const course = iframe.getAttribute("data-course");
+
+      players[elementId] = new YT.Player(iframe, {
+        events: {
+          'onStateChange': function(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+              markCompleted(course, elementId);
+            }
+          }
+        }
+      });
+    });
+  }
+
+  function markCompleted(course, elementId) {
+    fetch("/update_progress", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({course: course, element: elementId})
+    })
+    .then(res => res.json())
+    .then(data => console.log("✅ Progress updated:", data));
+  }
+  </script>
+</body>
+</html>
