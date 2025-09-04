@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+  <div class="container">
+    <div class="flip-card" id="flip-card">
+      <div class="flip-card-inner">
+        
+        <!-- Student Login -->
+        <div class="flip-card-front">
+          <h2>Student Login</h2>
+          <form action="/student_login" method="POST">
+            <input type="email" name="email" placeholder="Student Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+          </form>
+          <p><a href="#" onclick="flipCard()">Login as Admin?</a></p>
+        </div>
+
+        <!-- Admin Login -->
+        <div class="flip-card-back">
+          <h2>Admin Login</h2>
+          <form action="/admin_login" method="POST">
+            <input type="email" name="email" placeholder="Admin Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+          </form>
+          <p><a href="#" onclick="flipCard()">Back to Student</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function flipCard() {
+      document.getElementById("flip-card").classList.toggle("flipped");
+    }
+  </script>
+</body>
+</html>

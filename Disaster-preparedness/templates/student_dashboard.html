@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/student_dashboard.css') }}">
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Student</h2>
+      <ul>
+        <li><a href="#courses">📚 Courses</a></li>
+        <li><a href="#quizzes">📝 Quizzes</a></li>
+        <li><a href="#drills">🎯 Drills</a></li>
+        <li><a href="#profile">👤 Profile</a></li>
+        <li><a href="{{ url_for('logout') }}">🚪 Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+<main class="content">
+  <!-- Courses Section -->
+  <section id="courses" class="section">
+    <h2>📚 Disaster Preparedness Courses</h2>
+    <div class="course-card">
+      <h3>🌍 Earthquake</h3>
+      <p>Learn earthquake types and survival strategies.</p>
+      <a href="/course/1" class="btn">View Course</a>
+    </div>
+
+    <div class="course-card">
+      <h3>🌊 Floods</h3>
+      <p>Understand floods, their causes, and how to stay safe.</p>
+      <a href="/course/2" class="btn">View Course</a>
+    </div>
+
+    <div class="course-card">
+      <h3>🔥 Fire Safety (Schools & Colleges)</h3>
+      <p>Respond to fires and follow evacuation drills safely.</p>
+      <a href="/course/3" class="btn">View Course</a>
+    </div>
+  </section>
+
+  <!-- Quizzes Section -->
+   <section id="quizzes" class="section" style="display:none;">
+  <h2>📝 Disaster Preparedness Quizzes</h2>
+
+  <div class="course-card">
+    <h3>🌍 Earthquake Quiz</h3>
+    <p>Test your knowledge about earthquakes and safety measures.</p>
+    <a href="/quiz/earthquake" class="btn">Start Quiz</a>
+  </div>
+
+  <div class="course-card">
+    <h3>🌊 Flood Quiz</h3>
+    <p>Check your preparedness for flood situations.</p>
+    <a href="/quiz/flood" class="btn">Start Quiz</a>
+  </div>
+
+  <div class="course-card">
+    <h3>🔥 Fire Safety Quiz</h3>
+    <p>Learn safe responses for fire emergencies.</p>
+    <a href="/quiz/fire" class="btn">Start Quiz</a>
+  </div>
+</section>
+
+
+  <!-- Drills Section -->
+  <section id="drills" class="section" style="display:none;">
+    <h2>🎯 Safety Drills</h2>
+    <p>Practice mock drills for disaster situations (coming soon...)</p>
+  </section>
+
+  <!-- Profile Section -->
+   <section id="profile" class="section" style="display:none;">
+  <h2>👤 Profile</h2>
+  <div class="profile-card">
+    <img src="{{ url_for('static', filename='images/default_profile.png') }}" 
+         alt="Profile Photo" class="profile-photo">
+    <h3>{{ student_name }}</h3>
+    <p>Email: {{ session['student_email'] }}</p>
+  </div>
+  <form action="/upload_profile_photo" method="POST" enctype="multipart/form-data">
+  <input type="file" name="photo" accept="image/*" style="display:none;" id="photoInput">
+  <label for="photoInput" class="edit-photo-btn">Edit Profile Photo</label>
+  <button type="submit" class="edit-photo-btn">Upload</button>
+</form>
+<div class="achievements-card">
+  <h3>🏆 Achievements</h3>
+  <form action="/add_achievement" method="POST">
+    <input type="text" name="achievement" placeholder="Enter your achievement" required>
+    <button type="submit">Add</button>
+  </form>
+  <ul>
+    {% for ach in achievements %}
+      <li>{{ ach }}</li>
+    {% else %}
+      <li>No achievements yet.</li>
+    {% endfor %}
+  </ul>
+</div>
+
+</section>
+
+</main>
+
+  </div>
+  <script>
+  // Show only the clicked section
+  const sections = document.querySelectorAll(".section");
+  const links = document.querySelectorAll(".sidebar a");
+
+  links.forEach(link => {
+    link.addEventListener("click", (e) => {
+      // prevent jumping
+        e.preventDefault();
+
+      // get target id (#courses, #quizzes etc.)
+      const target = link.getAttribute("href").substring(1);
+
+      // hide all sections
+      sections.forEach(sec => sec.style.display = "none");
+
+      // show target section
+      document.getElementById(target).style.display = "block";
+    });
+  });
+</script>
+
+</body>
+</html>

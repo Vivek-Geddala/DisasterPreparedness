@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Earthquake Quiz — Chat</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/quiz.css') }}">
+</head>
+<body>
+  <div class="quiz-wrap">
+    <header class="quiz-header">
+      <h1>Earthquake Quiz Bot</h1>
+      <div class="subtitle">Answer 10 questions. Get instant feedback. Finish to see your score.</div>
+    </header>
+
+    <main class="chat-area" id="chatArea">
+      <!-- messages appended here -->
+    </main>
+
+    <div class="controls">
+      <button id="startBtn">Start Quiz</button>
+      <button id="restartBtn" style="display:none">Restart Quiz</button>
+      <button id="exitBtn" style="display:none">Exit</button>
+    </div>
+  </div>
+
+  <script >
+const topic = "{{ topic }}";  // passed from Flask
+const chatArea = document.getElementById("chatArea");
+const startBtn = document.getElementById("startBtn");
+const restartBtn = document.getElementById("restartBtn");
+const exitBtn = document.getElementById("exitBtn");
+
+function appendMsg(kind, html) {
+  const d = document.createElement("div");
+  d.className = "msg " + (kind === "bot" ? "bot" : "user");
+  d.innerHTML = html;
+  chatArea.appendChild(d);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+// show initial greeting
+appendMsg("bot", "👋 Hi! I am the Earthquake Quiz Bot. Click <b>Start Quiz</b> to begin (10 questions).");
+
+// fetch next question from server
+async function fetchNextQuestion() {
+  const res = await fetch("/api/quiz/next");
+  const data = await res.json();
+  return data;
+}
+
+// start a new quiz
+async function startQuiz() {
+  await fetch(`/api/quiz/new/${topic}`, {method: "POST"});
+  chatArea.innerHTML = "";
+  appendMsg("bot", `👋 ${topic.charAt(0).toUpperCase()+topic.slice(1)} Quiz started! I will ask 10 questions. Good luck!`);
+  setTimeout(showNext, 900);
+}
+
+
+// show next question (from /api/quiz/next)
+async function showNext() {
+  const data = await fetchNextQuestion();
+  if (data.status === "error") {
+    appendMsg("bot", "⚠️ " + (data.message || "Cannot get question."));
+    return;
+  }
+  if (data.status === "finished") {
+    showSummary(data.score, data.total);
+    return;
+  }
+  const q = data.question;
+  appendMsg("bot", `<b>Q:</b> ${escapeHtml(q.prompt)}`);
+  // options container appended as bot bubble too but interactive
+  const cont = document.createElement("div");
+  cont.className = "msg bot options";
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement("button");
+    btn.className = "option-btn";
+    btn.innerText = opt;
+    btn.onclick = () => { handleAnswer(q.qid, idx, btn, cont); };
+    cont.appendChild(btn);
+  });
+  chatArea.appendChild(cont);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+// send answer to server
+async function handleAnswer(qid, chosen, btn, optionsContainer) {
+  // disable all option buttons immediately
+  const buttons = optionsContainer.querySelectorAll("button");
+  buttons.forEach(b => b.disabled = true);
+
+  // show user selected bubble
+  appendMsg("user", btn.innerText);
+
+  // post to server
+  const res = await fetch("/api/quiz/answer", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ qid: qid, chosen: chosen })
+  });
+  const data = await res.json();
+
+  if (data.status !== "ok") {
+    appendMsg("bot", "⚠️ " + (data.message || "Error processing answer."));
+    return;
+  }
+
+  // mark button correct/wrong visually
+  if (data.correct) {
+    btn.classList.add("correct");
+    appendMsg("bot", `✅ Correct! <div style="font-size:12px;color:#333;margin-top:6px">${escapeHtml(data.explanation)}</div>`);
+  } else {
+    btn.classList.add("wrong");
+    // highlight correct option if still available in the UI
+    // we don't know original options order on client except from button text, so just inform
+    appendMsg("bot", `❌ Wrong. <div style="font-size:12px;color:#333;margin-top:6px">${escapeHtml(data.explanation)}</div>`);
+  }
+
+  // small delay then either next question or summary
+  setTimeout(async () => {
+    if (data.finished) {
+      showSummary(data.score, data.total);
+    } else {
+      showNext();
+    }
+  }, 1000);
+}
+
+function showSummary(score, total) {
+  appendMsg("bot", `<div class="score-summary">You scored <b>${score}</b> out of <b>${total}</b> 🎉</div>`);
+  appendMsg("bot", `Would you like to <b>Continue</b> (another 10 questions) or <b>Exit</b>?`);
+  restartBtn.style.display = "inline-block";
+  exitBtn.style.display = "inline-block";
+}
+
+// helpers
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+// button handlers
+startBtn.onclick = startQuiz;
+restartBtn.onclick = async () => {
+  await fetch("/api/quiz/restart", {method: "POST"});
+  restartBtn.style.display = "none";
+  exitBtn.style.display = "none";
+  chatArea.innerHTML = "";
+  appendMsg("bot", "🔄 Restarting quiz... Good luck!");
+  setTimeout(showNext, 900);
+};
+exitBtn.onclick = () => {
+  chatArea.innerHTML = "";
+  appendMsg("bot", "👋 Quiz ended. You can start again anytime.");
+  restartBtn.style.display = "none";
+  exitBtn.style.display = "none";
+  startBtn.style.display = "inline-block";
+  window.location.href = "/student_dashboard"; 
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+/* course_page.css */
+
+/* General page setup */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f7fb;
+  color: #333;
+}
+
+/* Container */
+.course-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Heading */
+.course-container h1 {
+  font-size: 2rem;
+  color: #2a4d8f;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.course-container p.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+/* Section headers */
+.course-section h2 {
+  font-size: 1.5rem;
+  margin-top: 25px;
+  color: #2a4d8f;
+  border-left: 4px solid #2a4d8f;
+  padding-left: 8px;
+}
+
+/* Text content */
+.course-section p, 
+.course-section ul {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 10px 0;
+}
+
+/* List styling */
+.course-section ul {
+  padding-left: 20px;
+}
+
+.course-section ul li {
+  margin: 8px 0;
+  list-style: "✅ ";
+  color: #333;
+}
+
+/* Video section */
+.video-links {
+  margin-top: 20px;
+}
+
+.video-links a {
+  display: block;
+  margin: 10px 0;
+  padding: 10px 15px;
+  background: #2a4d8f;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
+.video-links a:hover {
+  background: #1e3565;
+}
